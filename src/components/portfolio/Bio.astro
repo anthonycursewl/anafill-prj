@@ -1,0 +1,27 @@
+---
+interface Props {
+  bio: string[];
+}
+
+const { bio } = Astro.props;
+---
+
+<section class="info-section">
+  {
+    bio.map((para) => (
+      <p class="info-text dynamic-typewriter" set:html={para} />
+    ))
+  }
+</section>
+
+<style>
+  .info-section {
+    margin: 2rem 0;
+  }
+  .info-text {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+</style>

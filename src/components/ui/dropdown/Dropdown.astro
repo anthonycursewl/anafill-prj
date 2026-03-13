@@ -1,0 +1,345 @@
+---
+interface DropdownItem {
+  label: string;
+  value: string;
+  icon?: string;
+  disabled?: boolean;
+  danger?: boolean;
+  divider?: boolean;
+}
+
+interface Props {
+  name?: string;
+  id?: string;
+  label?: string;
+  placeholder?: string;
+  error?: string;
+  disabled?: boolean;
+  items: DropdownItem[];
+  value?: string;
+}
+
+const {
+  name,
+  id,
+  label,
+  placeholder = 'Seleccionar...',
+  error,
+  disabled = false,
+  items,
+  value,
+} = Astro.props;
+
+const dropdownId = id || name;
+const selectedItem = items.find(item => item.value === value);
+---
+
+<div 
+  class:list={['dropdown-wrapper', { 'has-error': error, 'is-disabled': disabled }]}
+  data-dropdown
+  data-dropdown-id={dropdownId}
+>
+  {label && (
+    <label class="dropdown-label" data-dropdown-label>
+      {label}
+    </label>
+  )}
+  
+  <button
+    type="button"
+    name={name}
+    id={dropdownId}
+    disabled={disabled}
+    class="dropdown-trigger"
+    data-dropdown-trigger
+    aria-expanded="false"
+    aria-haspopup="listbox"
+  >
+    <span class="dropdown-value" data-dropdown-value>
+      {selectedItem?.label || placeholder}
+    </span>
+    <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+  
+  <div class="dropdown-menu" data-dropdown-menu role="listbox">
+    {items.map((item, index) => (
+      item.divider ? (
+        <div class="dropdown-divider" role="separator"></div>
+      ) : (
+        <button
+          type="button"
+          role="option"
+          data-value={item.value}
+          data-selected={item.value === value}
+          disabled={item.disabled}
+          class:list={[
+            'dropdown-item',
+            { 'is-selected': item.value === value, 'is-danger': item.danger, 'is-disabled': item.disabled }
+          ]}
+          aria-selected={item.value === value}
+        >
+          {item.icon && (
+            <span class="dropdown-item-icon" set:html={item.icon} />
+          )}
+          <span class="dropdown-item-label">{item.label}</span>
+        </button>
+      )
+    ))}
+  </div>
+  
+  <input type="hidden" name={name} value={value} data-dropdown-input />
+  
+  {error && <span class="dropdown-error">{error}</span>}
+</div>
+
+<script>
+  document.querySelectorAll('[data-dropdown]').forEach((dropdown) => {
+    const trigger = dropdown.querySelector('[data-dropdown-trigger]') as HTMLButtonElement;
+    const menu = dropdown.querySelector('[data-dropdown-menu]') as HTMLDivElement;
+    const valueEl = dropdown.querySelector('[data-dropdown-value]') as HTMLSpanElement;
+    const input = dropdown.querySelector('[data-dropdown-input]') as HTMLInputElement;
+    const items = dropdown.querySelectorAll('[data-value]');
+    
+    const close = () => {
+      menu.classList.remove('is-open');
+      trigger?.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('keydown', handleKeydown);
+    };
+    
+    const open = () => {
+      menu.classList.add('is-open');
+      trigger?.setAttribute('aria-expanded', 'true');
+      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('keydown', handleKeydown);
+      
+      const selected = menu.querySelector('[data-selected="true"]');
+      if (selected) {
+        (selected as HTMLElement).focus();
+      }
+    };
+    
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!dropdown.contains(e.target as Node)) {
+        close();
+      }
+    };
+    
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        close();
+        trigger?.focus();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const selected = menu.querySelector('[data-selected="true"]') as HTMLElement;
+        const allItems = Array.from(items) as HTMLElement[];
+        const currentIndex = allItems.indexOf(selected);
+        const nextIndex = (currentIndex + 1) % allItems.length;
+        allItems[nextIndex]?.focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const selected = menu.querySelector('[data-selected="true"]') as HTMLElement;
+        const allItems = Array.from(items) as HTMLElement[];
+        const currentIndex = allItems.indexOf(selected);
+        const prevIndex = currentIndex <= 0 ? allItems.length - 1 : currentIndex - 1;
+        allItems[prevIndex]?.focus();
+      }
+    };
+    
+    trigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (menu.classList.contains('is-open')) {
+        close();
+      } else {
+        open();
+      }
+    });
+    
+    items.forEach((item) => {
+      item.addEventListener('click', () => {
+        const value = (item as HTMLElement).dataset.value;
+        const label = item.querySelector('.dropdown-item-label')?.textContent;
+        
+        if (input && value && label) {
+          input.value = value;
+          valueEl.textContent = label;
+          
+          items.forEach((i) => {
+            i.setAttribute('data-selected', 'false');
+          });
+          item.setAttribute('data-selected', 'true');
+          
+          dropdown.dispatchEvent(new CustomEvent('change', { detail: { value, label } }));
+        }
+        
+        close();
+      });
+    });
+  });
+</script>
+
+<style>
+  .dropdown-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+    position: relative;
+  }
+
+  .dropdown-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.025em;
+  }
+
+  .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--space-4);
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .dropdown-trigger:hover:not(:disabled) {
+    border-color: var(--color-text-muted);
+  }
+
+  .dropdown-trigger:focus {
+    outline: none;
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
+  }
+
+  .dropdown-trigger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .dropdown-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--color-text-muted);
+  }
+
+  :global(.dropdown-wrapper:not([data-value=""]) .dropdown-value) {
+    color: var(--color-text-primary);
+  }
+
+  .dropdown-arrow {
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: var(--space-1);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all var(--transition-fast);
+    max-height: 240px;
+    overflow-y: auto;
+  }
+
+  .dropdown-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: transparent;
+    border: none;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    text-align: left;
+  }
+
+  .dropdown-item:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
+  }
+
+  .dropdown-item:focus {
+    outline: none;
+    background: var(--color-bg-tertiary);
+  }
+
+  .dropdown-item.is-selected {
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+  }
+
+  .dropdown-item.is-danger {
+    color: var(--color-danger);
+  }
+
+  .dropdown-item.is-danger:hover:not(:disabled) {
+    background: rgba(255, 71, 87, 0.1);
+  }
+
+  .dropdown-item.is-disabled,
+  .dropdown-item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .dropdown-item-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-1) 0;
+  }
+
+  .dropdown-error {
+    font-size: 0.75rem;
+    color: var(--color-danger);
+  }
+
+  .has-error .dropdown-trigger {
+    border-color: var(--color-border-error);
+  }
+
+  .is-disabled .dropdown-trigger {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>

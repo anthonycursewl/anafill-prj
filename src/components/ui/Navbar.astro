@@ -1,0 +1,410 @@
+---
+
+---
+
+<nav id="floating-navbar" class="floating-navbar">
+  <div class="nav-content">
+    <div class="nav-left">
+      <div id="visitor-location" class="visitor-location">
+        <span class="loading-dot"></span>
+      </div>
+    </div>
+
+    <div class="nav-center">
+      <!-- Desktop Links -->
+      <div class="desktop-links">
+        <a href="#bio" class="nav-link">Bio</a>
+        <a href="#identity" class="nav-link">Identity</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+
+      <!-- Mobile Dropdown Toggle -->
+      <div class="mobile-menu-container">
+        <button
+          id="mobile-menu-btn"
+          class="mobile-btn"
+          aria-label="Menu"
+          type="button"
+        >
+          <span>Explore</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="chevron-icon"><path d="m6 9 6 6 6-6"></path></svg
+          >
+        </button>
+
+        <div id="nav-dropdown" class="nav-dropdown">
+          <a href="#bio" class="dropdown-item">
+            <span class="item-number">01</span>
+            <span class="item-text">Brief Bio</span>
+          </a>
+          <a href="#identity" class="dropdown-item">
+            <span class="item-number">02</span>
+            <span class="item-text">Core Identity</span>
+          </a>
+          <a href="#projects" class="dropdown-item">
+            <span class="item-number">03</span>
+            <span class="item-text">Showcase</span>
+          </a>
+          <a href="#contact" class="dropdown-item">
+            <span class="item-number">04</span>
+            <span class="item-text">Get in Touch</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <button
+        id="scroll-to-top"
+        class="top-btn"
+        aria-label="Scroll to top"
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"><path d="m18 15-6-6-6 6"></path></svg
+        >
+      </button>
+    </div>
+  </div>
+</nav>
+
+<style is:global>
+  :root {
+    --nav-bg: rgba(10, 10, 13, 0.85);
+    --nav-border: rgba(255, 255, 255, 0.12);
+    --nav-blur: 20px;
+  }
+
+  .floating-navbar {
+    position: fixed;
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    height: 54px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(var(--nav-blur));
+    -webkit-backdrop-filter: blur(var(--nav-blur));
+    border: 1px solid var(--nav-border);
+    border-radius: 99px;
+    z-index: 9999; /* Asegurar que esté por encima de casi todo */
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .floating-navbar.visible {
+    top: 24px;
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .nav-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+    position: relative;
+  }
+
+  .nav-left {
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 14px;
+  }
+
+  .nav-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .desktop-links {
+    display: flex;
+    gap: 2px;
+  }
+
+  .nav-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 99px;
+    transition: all 0.2s ease;
+    font-family: var(--font-code);
+    font-weight: 500;
+  }
+
+  .nav-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .nav-right {
+    min-width: 50px;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 6px;
+  }
+
+  /* Mobile Dropdown Button */
+  .mobile-menu-container {
+    display: none;
+    position: relative;
+  }
+
+  .mobile-btn {
+    border: none;
+    background: transparent;
+    color: #f4f4f4;
+    padding: 7px 18px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--font-code);
+    transition: all 0.2s ease;
+  }
+
+  .chevron-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .mobile-menu-container.active .chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  /* Dropdown Menu */
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(15px);
+    background: #0f0f12;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 10px;
+    min-width: 220px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 10000;
+  }
+
+  .nav-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    font-family: var(--font-code);
+    margin-bottom: 2px;
+  }
+
+  .dropdown-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    transform: translateX(4px);
+  }
+
+  .item-number {
+    font-size: 0.7rem;
+    opacity: 0.4;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .item-text {
+    font-weight: 500;
+  }
+
+  .top-btn {
+    border: none;
+    background: transparent;
+    color: #f4f4f4;
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .visitor-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+  }
+
+  .location-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .country-text {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #94a3b8;
+    font-family: var(--font-code);
+  }
+
+  .loading-dot {
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #4ade80;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(0.9);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.9);
+      opacity: 0.6;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .desktop-links {
+      display: none;
+    }
+    .mobile-menu-container {
+      display: block;
+    }
+    .floating-navbar {
+      width: fit-content;
+      min-width: 260px;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const nav = document.getElementById("floating-navbar");
+    const locationEl = document.getElementById("visitor-location");
+    const scrollTop = document.getElementById("scroll-to-top");
+    const mobileBtn = document.getElementById("mobile-menu-btn");
+    const dropdown = document.getElementById("nav-dropdown");
+    const menuContainer = document.querySelector(".mobile-menu-container");
+
+    // Scroll Logic
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 400) {
+        nav.classList.add("visible");
+      } else {
+        nav.classList.remove("visible");
+        dropdown.classList.remove("active");
+        menuContainer.classList.remove("active");
+      }
+    });
+
+    scrollTop.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Mobile Menu Logic
+    mobileBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isActive = dropdown.classList.toggle("active");
+      menuContainer.classList.toggle("active", isActive);
+    });
+
+    // Close dropdown on click outside
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && !mobileBtn.contains(e.target)) {
+        dropdown.classList.remove("active");
+        menuContainer.classList.remove("active");
+      }
+    });
+
+    // Close on link click
+    dropdown.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        dropdown.classList.remove("active");
+        menuContainer.classList.remove("active");
+      });
+    });
+
+    // IP Location Logic - Using a more robust approach
+    async function getVisitorData() {
+      try {
+        // Primary API: ipapi.co
+        const res = await fetch("https://ipapi.co/json/");
+        if (!res.ok) throw new Error("Primary API failed");
+
+        const data = await res.json();
+        if (data.country_code) {
+          const countryCode = data.country_code.toLowerCase();
+          const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
+          locationEl.innerHTML = `
+            <div class="location-badge" title="${data.country_name} (${data.ip})">
+              <img src="${flagUrl}" alt="${data.country_code}" style="width: 20px; height: auto; border-radius: 2px; display: block;" />
+              <span class="country-text">${data.country_code}</span>
+            </div>
+          `;
+        } else {
+          locationEl.innerHTML = "🌍";
+        }
+      } catch (err) {
+        // Fallback or Silent fail
+        console.warn("Geolocation failed, manual override or default used.");
+        locationEl.innerHTML = "🌍";
+      }
+    }
+
+    getVisitorData();
+  })();
+</script>

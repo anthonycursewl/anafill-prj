@@ -1,0 +1,167 @@
+---
+interface File {
+  name: string;
+  language: string;
+  active?: boolean;
+}
+
+interface Props {
+  files: File[];
+}
+
+const { files } = Astro.props;
+---
+
+<div class="code-tabs-container" data-code-tabs>
+  <div class="tabs-header">
+    <div class="tabs-list">
+      {
+        files.map((file, index) => (
+          <button
+            class:list={["tab-item", { active: file.active || index === 0 }]}
+            data-tab={index}
+          >
+            <span class="tab-icon">
+              {file.name.endsWith(".ts")
+                ? "󰛦"
+                : file.name.endsWith(".md")
+                  ? "󰍔"
+                  : "󰈙"}
+            </span>
+            {file.name}
+          </button>
+        ))
+      }
+    </div>
+    <div class="header-meta">
+      <span id="active-lang">{files[0].language}</span>
+    </div>
+  </div>
+  <div class="tabs-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .code-tabs-container {
+    background: #0d0d0f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 2rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .tabs-header {
+    background: #16161b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 10px;
+  }
+
+  .tabs-list {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-item {
+    background: transparent;
+    border: none;
+    padding: 12px 16px;
+    color: #94a3b8;
+    font-family: "Fira Code", monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .tab-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: #f8fafc;
+  }
+
+  .tab-item.active {
+    background: #0d0d0f;
+    color: #a78bfa;
+    border-bottom: 2px solid #a78bfa;
+  }
+
+  .tab-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+  }
+
+  .header-meta {
+    padding: 0 15px;
+    color: #64748b;
+    font-size: 0.7rem;
+    font-family: "Fira Code", monospace;
+  }
+
+  .tabs-content {
+    min-height: 200px;
+  }
+
+  :global(.tab-panel) {
+    display: none;
+    padding: 1.5rem;
+    font-family: var(--font-code);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    animation: fadeIn 0.3s ease;
+  }
+
+  :global(.tab-panel.active) {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll("[data-code-tabs]").forEach((container) => {
+    const tabs = container.querySelectorAll(".tab-item");
+    const panels = container.querySelectorAll(".tab-panel");
+    const langDisplay = container.querySelector("#active-lang");
+
+    // Initial languages data from children if needed, but we'll use a simpler approach
+    const languages = Array.from(panels).map((p) => p.dataset.lang);
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => {
+        // Remove active from all
+        tabs.forEach((t) => t.classList.remove("active"));
+        panels.forEach((p) => p.classList.remove("active"));
+
+        // Add active to current
+        tab.classList.add("active");
+        panels[index].classList.add("active");
+
+        // Update language label
+        if (langDisplay) langDisplay.textContent = languages[index];
+      });
+    });
+  });
+</script>

@@ -1,0 +1,137 @@
+---
+import ProjectShowcase from "../ui/ProjectShowcase.astro";
+---
+
+<div class="projects-container">
+  <h2 class="section-title">Featured Projects</h2>
+
+  <!-- Malet -->
+  <ProjectShowcase
+    title="Malet"
+    description={`A high-performance finance app for individuals or small businesses. Featuring real-time tracking, optimized logistics, and a seamless mobile experience. \n\nMalet is a finance app that helps you track your expenses, income, and savings. It is a simple and easy-to-use app that can be used by anyone. It is also a great app for small businesses that need to track their finances.`}
+    fileName="malet.app.ts"
+    language="TypeScript"
+    images={[
+      "/images/malet_showcase_1.png",
+      "/images/malet_showcase_2.png",
+      "/images/malet_showcase_3.png",
+      "/images/malet_showcase_4.png",
+      "/images/malet_showcase_5.png",
+      "/images/malet_showcase_6.png",
+      "/images/malet_showcase_7.png",
+      "/images/malet_showcase_8.png",
+    ]}
+  >
+    <span class="syn-cmt">// High-performance delivery logic</span><br />
+    <span class="syn-kw">const</span>
+    <span class="syn-var">maletApp</span> = &#123;<br />
+    &nbsp;&nbsp;stack: <span class="syn-str">"React Native + Expo"</span>,<br />
+    &nbsp;&nbsp;backend: <span class="syn-str">"NestJS + Hexagonal Arch"</span
+    >,<br />
+    &nbsp;&nbsp;db: [<span class="syn-str">"PostgreSQL"</span>, <span
+      class="syn-str">"Redis"</span
+    >],<br />
+    &nbsp;&nbsp;orm: <span class="syn-str">"Prisma"</span>,<br />
+    &nbsp;&nbsp;status: <span class="syn-str">"Production Ready"</span><br />
+    &#125;;
+  </ProjectShowcase>
+
+  <!-- Malet Business -->
+  <ProjectShowcase
+    title="Malet Business"
+    description="The ultimate administrative tool for store owners. Manage multiple branches, track profits, and monitor inventory with real-time alerts."
+    fileName="business.config.yaml"
+    language="YAML"
+    images={[
+      "/images/malet_business_showcase_1.png",
+      "/images/malet_business_showcase_2.png",
+      "/images/malet_business_showcase_3.png",
+      "/images/malet_business_showcase_4.png",
+      "/images/malet_business_showcase_5.png",
+      "/images/malet_business_showcase_6.png",
+      "/images/malet_business_showcase_7.png",
+      "/images/malet_business_showcase_8.png",
+      "/images/malet_business_showcase_9.png",
+      "/images/malet_business_showcase_10.png",
+      "/images/malet_business_showcase_11.png",
+      "/images/malet_business_showcase_12.png",
+    ]}
+  >
+    <span class="syn-kw">malet-business</span>:<br />
+    &nbsp;&nbsp;<span class="syn-kw">platform</span>: <span class="syn-str"
+      >"Web & Mobile"</span
+    ><br />
+    &nbsp;&nbsp;<span class="syn-kw">branch-management</span>: <span
+      class="syn-num">true</span
+    ><br />
+    &nbsp;&nbsp;<span class="syn-kw">realtime-alerts</span>: <span
+      class="syn-kw">enabled</span
+    ><br />
+    &nbsp;&nbsp;<span class="syn-kw">analytics</span>: <span class="syn-str"
+      >"Profit & Sales"</span
+    >
+  </ProjectShowcase>
+
+  <!-- Bitter -->
+  <ProjectShowcase
+    title="Bitter"
+    description="A minimalist sanctuary for creative expression. Save and share contacts, images, and poems through a sophisticated smart link system."
+    fileName="bitter.md"
+    language="Markdown"
+    images={[
+      "/images/bitter_showcase_1.webp",
+      "/images/bitter_showcase_2.webp",
+      "/images/bitter_showcase_3.webp",
+      "/images/bitter_showcase_4.webp",
+      "/images/bitter_showcase_5.webp",
+      "/images/bitter_showcase_6.webp",
+      "/images/bitter_showcase_7.webp",
+    ]}
+  >
+    <span class="syn-cmt"># Bitter: Creative Sharing</span><br />
+    - <span class="syn-kw">Smart Links</span> for instant sharing.<br />
+    - <span class="syn-kw">Minimalist Editor</span> for poems.<br />
+    - <span class="syn-kw">Vault</span> for private images.<br />
+    - <span class="syn-cmt">Built for the creative soul.</span>
+  </ProjectShowcase>
+
+  <!-- Wheek -->
+  <ProjectShowcase
+    title="Wheek"
+    description="Accelerated productivity and task automation. Wheek is designed to streamline complex workflows with high-end performance metrics."
+    fileName="wheek.core.js"
+    language="JavaScript"
+    images={[
+      "/images/wheek_showcase_1.png",
+      "/images/wheek_showcase_2.png",
+      "/images/wheek_showcase_3.png",
+      "/images/wheek_showcase_4.png",
+      "/images/wheek_showcase_5.png",
+      "/images/wheek_showcase_6.png",
+      "/images/wheek_showcase_7.png",
+      "/images/wheek_showcase_8.png",
+      "/images/wheek_showcase_9.png",
+    ]}
+  >
+    <span class="syn-kw">export default</span> &#123;<br />
+    &nbsp;&nbsp;engine: <span class="syn-str">"Wheek Core v2"</span>,<br />
+    &nbsp;&nbsp;automation: <span class="syn-num">100</span>,<br />
+    &nbsp;&nbsp;performance: <span class="syn-str">"Ultra-fast"</span>,<br />
+    &nbsp;&nbsp;optimization: [<span class="syn-str">"Memoization"</span>, <span
+      class="syn-str">"Parallel Processing"</span
+    >]<br />
+    &#125;;
+  </ProjectShowcase>
+</div>
+
+<style>
+  .section-title {
+    font-size: 2rem;
+    margin: 3rem 0 2rem;
+    color: var(--acc-purple);
+    text-align: center;
+  }
+  .projects-container {
+    padding-top: 2rem;
+  }
+</style>

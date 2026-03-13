@@ -1,0 +1,128 @@
+---
+---
+<script is:inline>
+  // Typing Effect Logic with HTML support
+  function typeEffect(element, htmlContent, speed = 5, callback) {
+    const temp = document.createElement("div");
+    temp.innerHTML = htmlContent;
+    const nodes = Array.from(temp.childNodes);
+    element.innerHTML = "";
+    element.classList.add("typing");
+
+    let nodeIndex = 0;
+    let charIndex = 0;
+
+    function type() {
+      if (nodeIndex >= nodes.length) {
+        element.classList.remove("typing");
+        if (callback) callback();
+        return;
+      }
+
+      const curNode = nodes[nodeIndex];
+
+      if (curNode.nodeType === Node.TEXT_NODE) {
+        if (charIndex < curNode.textContent.length) {
+          element.appendChild(
+            document.createTextNode(curNode.textContent.charAt(charIndex)),
+          );
+          charIndex++;
+          setTimeout(type, speed);
+        } else {
+          nodeIndex++;
+          charIndex = 0;
+          type();
+        }
+      } else if (curNode.nodeType === Node.ELEMENT_NODE) {
+        let wrapper = element.querySelector(`[data-node-idx="${nodeIndex}"]`);
+        if (!wrapper) {
+          wrapper = document.createElement(curNode.tagName);
+          Array.from(curNode.attributes).forEach((attr) =>
+            wrapper.setAttribute(attr.name, attr.value),
+          );
+          wrapper.setAttribute("data-node-idx", nodeIndex);
+          element.appendChild(wrapper);
+        }
+
+        const subContent = curNode.textContent;
+        if (charIndex < subContent.length) {
+          wrapper.appendChild(
+            document.createTextNode(subContent.charAt(charIndex)),
+          );
+          charIndex++;
+          setTimeout(type, speed);
+        } else {
+          nodeIndex++;
+          charIndex = 0;
+          type();
+        }
+      }
+    }
+
+    type();
+  }
+
+  // Typewriter with sequential support for projects
+  async function sequentialType(container) {
+    if (container.dataset.typed) return;
+    container.dataset.typed = "true";
+
+    const skeleton = container.querySelector(".project-skeleton");
+    const realContent = container.querySelector(".project-real-content");
+    const thought = container.querySelector(".thought-wrapper");
+    const elements = realContent.querySelectorAll(".dynamic-typewriter");
+
+    // 1. Wait 2 seconds with skeleton visible
+    await new Promise(r => setTimeout(r, 2000));
+
+    // 2. Hide skeleton, show content containers
+    skeleton.style.display = "none";
+    realContent.style.display = "block";
+
+    // 3. Type elements sequentially
+    for (const el of elements) {
+      const html = el.innerHTML;
+      el.innerHTML = "";
+      await new Promise(resolve => typeEffect(el, html, 8, resolve));
+    }
+
+    // 4. Show thought after a small delay
+    if (thought) {
+      await new Promise(r => setTimeout(r, 400));
+      thought.style.display = "flex";
+      thought.style.animation = "fadeIn 0.5s ease-out forwards";
+    }
+  }
+
+  // Initialize Observers
+  const projectObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          sequentialType(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  const generalObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !entry.target.dataset.typed) {
+          // Only for standalone typewriters (not inside projects)
+          if (!entry.target.closest("[data-project-header]")) {
+            const html = entry.target.innerHTML;
+            entry.target.innerHTML = "";
+            entry.target.dataset.typed = "true";
+            typeEffect(entry.target, html, 10);
+          }
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  document.querySelectorAll("[data-project-header]").forEach(el => projectObserver.observe(el));
+  document.querySelectorAll(".dynamic-typewriter").forEach(el => generalObserver.observe(el));
+</script>

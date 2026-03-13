@@ -1,0 +1,199 @@
+---
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+
+const stats = [
+  { label: "Lines of Code", value: "100k+" },
+  { label: "Git Commits", value: "2450" },
+  { label: "Bugs Fixed", value: "1337" },
+  { label: "Coffee Consumed", value: "∞" }
+];
+
+const mainStack = [
+  { group: "Languages", items: ["TypeScript", "JavaScript", "SQL", "Go"] },
+  { group: "Frontend", items: ["React", "Astro", "Angular", "Next.js", "Tailwind"] },
+  { group: "Backend", items: ["Node.js", "NestJS", "Express", "PostgreSQL", "MongoDB"] },
+  { group: "Infrastructure", items: ["Docker", "GitHub Actions", "Nginx", "VPS"] }
+];
+
+const experience = [
+  {
+    title: "Full-stack Freelancer",
+    period: "2025 - Present",
+    desc: "Building high-performance delivery systems and web applications for global clients."
+  },
+  {
+    title: "Senior Frontend Engineer @ Oxidux",
+    period: "2026",
+    desc: "Led the development of administrative dashboards and high-traffic landing pages."
+  },
+  {
+    title: "Co-founder @ Malet",
+    period: "2025 - Present",
+    desc: "Co-created a finance tracking app used by small businesses to manage their logistics."
+  }
+];
+---
+
+<div class="friendly-identity">
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    {stats.map(stat => (
+      <div class="stat-card">
+        <span class="stat-value">{stat.value}</span>
+        <span class="stat-label">{stat.label}</span>
+      </div>
+    ))}
+  </div>
+
+  <!-- Tech Groups -->
+  <div class="tech-groups">
+    {mainStack.map(group => (
+      <div class="tech-group">
+        <h4 class="group-title">{group.group}</h4>
+        <div class="tech-items">
+          {group.items.map(item => (
+            <span class="tech-tag">{item}</span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Highlight Experience -->
+  <div class="experience-list">
+    <h4 class="section-title">Key Experience</h4>
+    {experience.map(exp => (
+      <div class="exp-item">
+        <div class="exp-header">
+          <span class="exp-title">{exp.title}</span>
+          <span class="exp-period">{exp.period}</span>
+        </div>
+        <p class="exp-desc">{exp.desc}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .friendly-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+  }
+
+  .tech-groups {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+  }
+
+  .group-title {
+    font-size: 0.9rem;
+    color: #ffffff;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    opacity: 0.8;
+  }
+
+  .tech-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tech-tag {
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+  }
+
+  .exp-item {
+    padding-left: 1rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+  }
+
+  .exp-title {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 0.95rem;
+  }
+
+  .exp-period {
+    color: #64748b;
+    font-size: 0.8rem;
+  }
+
+  .exp-desc {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 480px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .tech-groups {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+---
+<div class="crt-background">
+  <div class="crt-overlay"></div>
+  <div class="scanlines"></div>
+  <div class="flicker"></div>
+  <div class="static-noise"></div>
+  <div class="glow-container">
+    <div class="ambient-glow"></div>
+  </div>
+</div>
+
+<style>
+  .crt-background {
+    position: absolute;
+    inset: 0;
+    background: #08080c;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  /* Scanlines Effect */
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Moving scan bar */
+  .crt-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      rgba(18, 16, 16, 0) 100%
+    );
+    background-size: 100% 100vh;
+    animation: scanbar 8s linear infinite;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* Subtle CRT Flicker */
+  .flicker {
+    position: absolute;
+    inset: 0;
+    background: rgba(167, 139, 250, 0.015);
+    opacity: 0;
+    z-index: 4;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+  }
+
+  /* Static Noise */
+  .static-noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Ambient Glow */
+  .glow-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+  }
+
+  .ambient-glow {
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+    filter: blur(50px);
+  }
+
+  @keyframes scanbar {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  @keyframes flicker {
+    0% { opacity: 0.1; }
+    5% { opacity: 0.2; }
+    10% { opacity: 0.1; }
+    15% { opacity: 0.3; }
+    20% { opacity: 0.1; }
+    25% { opacity: 0.15; }
+    30% { opacity: 0.1; }
+    100% { opacity: 0.1; }
+  }
+
+  /* Screen curvature effect (optional, very subtle) */
+  .crt-background::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.4) 110%);
+    z-index: 5;
+    pointer-events: none;
+  }
+</style>

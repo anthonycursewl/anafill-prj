@@ -1,0 +1,461 @@
+---
+const suggestions = [
+  { label: "Tell me about yourself", value: "background" },
+  { label: "What's your tech stack?", value: "skills" },
+  { label: "Show me your projects", value: "projects" },
+  { label: "Available for hire?", value: "hire" },
+  { label: "Anything else?", value: "secret" },
+];
+---
+
+<div class="ai-chat-container">
+  <div class="chat-header">
+    <div class="header-status">
+      <span class="status-dot"></span>
+      <span class="status-name">Breadriuss (JS)</span>
+    </div>
+    <div class="header-model">v2.0.4-stable</div>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="message ai-message">
+      <div class="message-content">
+        Hi there. click on the buttons below to ask me anything.
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <div class="suggestions-container">
+      {
+        suggestions.map((s) => (
+          <button class="suggestion-pill" data-value={s.value}>
+            {s.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .ai-chat-container {
+    background: rgba(13, 13, 15, 0.8);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 20px;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    overflow: hidden;
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(167, 139, 250, 0.05);
+    backdrop-filter: blur(10px);
+  }
+
+  .chat-header {
+    background: rgba(22, 22, 27, 0.9);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #8839d3;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #8839d3;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .status-name {
+    color: #f8fafc;
+    font-size: 0.9rem;
+  }
+
+  .header-model {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-family: "Fira Code", monospace;
+  }
+
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(167, 139, 250, 0.2) transparent;
+  }
+
+  :global(.message) {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    animation: messageIn 0.3s ease-out forwards;
+  }
+
+  :global(.ai-message) {
+    align-self: flex-start !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #e2e8f0 !important;
+    border-bottom-left-radius: 4px !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .chat-code-block {
+    background: #09090b;
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: "Fira Code", monospace;
+    font-size: 0.8rem;
+    overflow-x: auto;
+    margin: 8px 0;
+    color: #f8fafc;
+    line-height: 1.4;
+  }
+
+  :global(.ai-message) {
+    align-self: flex-start !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #d6d6d6 !important;
+    border-bottom-left-radius: 4px !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  @keyframes messageIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Improved Code Box */
+  :global(.chat-code-container) {
+    background: #09090b !important;
+    border: 1px solid rgba(167, 139, 250, 0.3) !important;
+    border-radius: 12px !important;
+    margin: 12px 0 !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    width: 100% !important;
+  }
+
+  :global(.chat-code-header) {
+    background: rgba(255, 255, 255, 0.03) !important;
+    padding: 8px 14px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+
+  :global(.chat-code-dots) {
+    display: flex !important;
+    gap: 6px !important;
+  }
+
+  :global(.chat-code-dots span) {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  :global(.chat-code-lang) {
+    font-size: 0.65rem !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    font-family: "Fira Code", monospace !important;
+    font-weight: 700 !important;
+  }
+
+  :global(.chat-code-content) {
+    padding: 16px !important;
+    margin: 0 !important;
+    font-family: "Fira Code", monospace !important;
+    font-size: 0.8rem !important;
+    overflow-x: auto !important;
+    color: #f8fafc !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Syntax Highlighting in Chat */
+  :global(.chat-code-content .syn-kw) {
+    color: #c678dd;
+    font-weight: 600;
+  }
+  :global(.chat-code-content .syn-str) {
+    color: #98c379;
+  }
+  :global(.chat-code-content .syn-fn) {
+    color: #61afef;
+  }
+  :global(.chat-code-content .syn-cmt) {
+    color: #5c6370;
+    font-style: italic;
+  }
+  :global(.chat-code-content .syn-var) {
+    color: #e06c75;
+  }
+  :global(.chat-code-content .syn-num) {
+    color: #d19a66;
+  }
+
+  :global(.user-message) {
+    align-self: flex-end !important;
+    background: #a78bfa !important;
+    color: #0d0d0f !important;
+    border-radius: 16px !important;
+    border-bottom-right-radius: 4px !important;
+    padding: 12px 16px !important;
+    font-weight: 500 !important;
+    margin-left: auto !important;
+    max-width: 85% !important;
+    animation: messageIn 0.3s ease-out forwards !important;
+  }
+
+  /* Skeleton Loading State */
+  :global(.skeleton-loader) {
+    align-self: flex-start !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 16px !important;
+    border-bottom-left-radius: 4px !important;
+    padding: 16px !important;
+    width: 70% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    animation: messageIn 0.3s ease-out forwards !important;
+  }
+
+  :global(.skeleton-line) {
+    height: 12px !important;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%
+    ) !important;
+    background-size: 200% 100% !important;
+    animation: shimmer 1.5s infinite linear !important;
+    border-radius: 4px !important;
+  }
+
+  .skeleton-line:nth-child(2) { width: 90%; }
+  .skeleton-line:nth-child(3) { width: 60%; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .chat-footer {
+    padding: 20px;
+    background: rgba(18, 18, 22, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .suggestions-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .suggestion-pill {
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    color: #c4b5fd;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .suggestion-pill:hover {
+    background: rgba(167, 139, 250, 0.2);
+    border-color: #a78bfa;
+    transform: translateY(-2px);
+  }
+
+  .suggestion-pill:active {
+    transform: translateY(0);
+  }
+
+  /* Typing cursor effect */
+  .typing-cursor::after {
+    content: "|";
+    animation: blink 1s infinite;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const container = document.getElementById("chat-messages");
+    const pills = document.querySelectorAll(".suggestion-pill");
+
+    const responses = {
+      background:
+        "Anthony Zerpa is much more than just a developer; he is a Full-stack Engineer with a heavy focus on high-performance web systems. Currently finishing his Computer Engineering degree at UPTAIET (where he is among the top of his class), Anthony has dedicated the last few years to perfecting his craft. At 21, based in Venezuela, he has bridged the gap between pure engineering and high-end visual design. He approaches every project with a 'performance-first' mindset, ensuring that every millisecond of load time is optimized and every interaction feels deliberate and premium.",
+      skills:
+        "His technical arsonal is built on the most reliable modern technologies. On the frontend, he is an expert in TypeScript, React, and Astro, utilizing them to build SEO-optimized, lightning-fast interfaces. For the backend, Node.js is his primary runtime, often paired with PostgreSQL and Prisma ORM for structured, scalable data management. He doesn't stop at just application code—he is proficient in Docker containerization, CI/CD pipelines via GitHub Actions, and Linux server management, allowing him to ship complete, production-ready ecosystems from scratch.",
+      projects:
+        "He has shipped numerous production projects, ranging from custom e-commerce engines to specialized platforms like 'Bitter', a secure poem and contact sharing service. He excels at building complex logic, such as high-performance caching layers and automated microservices. For instance, here's a look at how he handles optimized data fetching in his projects:\n\n```typescript\n// Example of optimized store fetching\nasync function getStoreData(id: string) {\n  const cached = await redis.get(`store:${id}`);\n  if (cached) return JSON.parse(cached);\n  \n  const store = await prisma.store.findUnique({ \n    where: { id },\n    include: { products: true }\n  });\n  \n  if (store) {\n    await redis.set(`store:${id}`, JSON.stringify(store), 'EX', 3600);\n  }\n  return store;\n}\n```\nThis snippet represents his standard for clean, efficient, and scalable backend architecture.",
+      hire: "Absolutely! Anthony is currently open to high-impact freelance projects, full-time engineering roles, or innovative collaborations. He is particularly drawn to projects that involve software architecture design, distributed systems, or the integration of AI modules. If you are looking for a developer who understands both the business requirements and the technical depth needed to scale, he is ready to talk. You can reach out via the social links provided at the bottom of this page.",
+      secret:
+        "Beyond the lines of code, Anthony has a deep appreciation for minimalist design and high-end aesthetics. He is a firm believer that 'how it looks' is just as important as 'how it works'. He lives in dark mode, survives on an infinite loop of coffee and lo-fi beats, and has a weird obsession with making terminal-based interfaces. Fun fact: This entire portfolio exists because he wanted to prove that a professional profile doesn't have to be a boring PDF—it should be an experience.",
+    };
+
+    let isTyping = false;
+
+    function highlight(code) {
+      // Very basic highlighter for the chat
+      return code
+        .replace(/\/\/.*/g, '<span class="syn-cmt">$&</span>')
+        .replace(
+          /\b(async|function|const|await|return|if|if|export|import|from)\b/g,
+          '<span class="syn-kw">$1</span>',
+        )
+        .replace(/'[^']*'|"[^"]*"/g, '<span class="syn-str">$&</span>')
+        .replace(/\b(\w+)(?=\s*\()/g, '<span class="syn-fn">$1</span>')
+        .replace(/\b(prisma|redis|JSON)\b/g, '<span class="syn-var">$1</span>')
+        .replace(/\b\d+\b/g, '<span class="syn-num">$&</span>');
+    }
+
+    async function typeResponse(text) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = "message ai-message";
+      container.appendChild(messageDiv);
+      container.scrollTop = container.scrollHeight;
+
+      const parts = text.split(/(```[\s\S]*?```)/g);
+
+      for (const part of parts) {
+        if (part.startsWith("```")) {
+          const match = part.match(/```(\w+)?\n?([\s\S]*?)```/);
+          const lang = match[1] || "code";
+          const code = match[2].trim();
+
+          const codeBox = document.createElement("div");
+          codeBox.className = "chat-code-container";
+          codeBox.innerHTML = `
+            <div class="chat-code-header">
+              <div class="chat-code-dots"><span></span><span></span><span></span></div>
+              <span class="chat-code-lang">${lang}</span>
+            </div>
+            <pre class="chat-code-content">${highlight(code)}</pre>
+          `;
+          messageDiv.appendChild(codeBox);
+          container.scrollTop = container.scrollHeight;
+        } else {
+          const contentSpan = document.createElement("div");
+          contentSpan.className = "message-content typing-cursor";
+          messageDiv.appendChild(contentSpan);
+
+          const words = part.split(" ");
+          for (let word of words) {
+            if (!word) continue;
+            contentSpan.textContent += word + " ";
+            await new Promise((r) => setTimeout(r, 25));
+            container.scrollTop = container.scrollHeight;
+          }
+          contentSpan.classList.remove("typing-cursor");
+        }
+      }
+    }
+
+    function addUserMessage(text) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = "message user-message";
+      messageDiv.textContent = text;
+      container.appendChild(messageDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function createSkeleton() {
+      const skeleton = document.createElement("div");
+      skeleton.className = "skeleton-loader";
+      skeleton.innerHTML = `
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+      `;
+      return skeleton;
+    }
+
+    async function handleAction(pill) {
+      if (isTyping) return;
+
+      const value = pill.getAttribute("data-value");
+      const label = pill.textContent.trim();
+
+      isTyping = true;
+      addUserMessage(label);
+
+      // Show skeleton
+      const skeleton = createSkeleton();
+      container.appendChild(skeleton);
+      container.scrollTop = container.scrollHeight;
+
+      // Simulate thinking for 2 seconds
+      await new Promise((r) => setTimeout(r, 2000));
+      
+      // Remove skeleton
+      skeleton.remove();
+
+      const response =
+        responses[value] || "I don't have an answer for that yet.";
+      await typeResponse(response);
+
+      isTyping = false;
+    }
+
+    pills.forEach((pill) => {
+      pill.addEventListener("click", () => handleAction(pill));
+    });
+  })();
+</script>

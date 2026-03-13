@@ -1,0 +1,20 @@
+---
+interface Props {
+  email: string;
+}
+
+const { email } = Astro.props;
+---
+
+<footer class="portfolio-footer">
+  <div class="footer-content">
+    <img
+      src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcm5wdndnbHR6eHJ6eHJ6eHJ6eHJ6eHJ6eHJ6eHJ6eHJ6eHJ6eGomZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/3o7TKVUn7iM8FMEU24/giphy.gif"
+      alt="Gray Pixel Cat"
+      class="footer-gif"
+    />
+    <p class="footer-text">
+      get in touch email me <a href={`mailto:${email}`}>{email}</a>
+    </p>
+  </div>
+</footer>

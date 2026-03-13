@@ -1,0 +1,179 @@
+---
+---
+<div class="circuit-background">
+  <div class="circuit-container">
+    <svg class="circuit-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        
+        <linearGradient id="signalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#a78bfa" stop-opacity="0" />
+          <stop offset="50%" stop-color="#a78bfa" stop-opacity="1" />
+          <stop offset="100%" stop-color="#a78bfa" stop-opacity="0" />
+        </linearGradient>
+
+        <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#4c1d95" stop-opacity="0.3" />
+          <stop offset="100%" stop-color="#4c1d95" stop-opacity="0.1" />
+        </linearGradient>
+      </defs>
+
+      <!-- Static Lines (The PCB Traces) -->
+      <g class="circuit-lines">
+        <path d="M0 150 L200 150 L250 200 L400 200 L450 150 L650 150 L700 200 L1000 200" class="line-base" />
+        <path d="M1000 350 L800 350 L750 300 L600 300 L550 350 L400 350 L350 300 L0 300" class="line-base" />
+        <path d="M0 550 L150 550 L200 600 L350 600 L400 550 L600 550 L650 500 L800 500 L850 550 L1000 550" class="line-base" />
+        
+        <!-- Vertical-ish connectors -->
+        <path d="M200 0 L200 200 L250 250 L250 450 L200 500 L200 700 L250 750 L250 1000" class="line-base" />
+        <path d="M800 0 L800 150 L750 200 L750 400 L800 450 L800 650 L750 700 L750 1000" class="line-base" />
+        
+        <!-- Complex Bottom Section -->
+        <path d="M0 850 L200 850 L250 800 L450 800 L500 850 L700 850 L750 800 L1000 800" class="line-base" />
+        <path d="M300 1000 L300 900 L350 850 L550 850 L600 900 L600 1000" class="line-base" />
+      </g>
+
+      <!-- PCB Components (Chips) -->
+      <g class="pcb-components">
+        <rect x="420" y="170" width="60" height="60" rx="4" class="chip" />
+        <rect x="720" y="170" width="40" height="40" rx="2" class="chip" />
+        <rect x="120" y="520" width="50" height="50" rx="3" class="chip" />
+        <rect x="570" y="520" width="70" height="70" rx="4" class="chip" />
+      </g>
+
+      <!-- Animated Signals (The Current Flow) -->
+      <g class="circuit-signals">
+        <path d="M0 150 L200 150 L250 200 L400 200 L450 150 L650 150 L700 200 L1000 200" class="signal pulse-1" />
+        <path d="M1000 350 L800 350 L750 300 L600 300 L550 350 L400 350 L350 300 L0 300" class="signal pulse-2" />
+        <path d="M0 550 L150 550 L200 600 L350 600 L400 550 L600 550 L650 500 L800 500 L850 550 L1000 550" class="signal pulse-3" />
+        <path d="M200 0 L200 200 L250 250 L250 450 L200 500 L200 700 L250 750 L250 1000" class="signal pulse-4" />
+        <path d="M800 0 L800 150 L750 200 L750 400 L800 450 L800 650 L750 700 L750 1000" class="signal pulse-5" />
+        <path d="M0 850 L200 850 L250 800 L450 800 L500 850 L700 850 L750 800 L1000 800" class="signal pulse-6" />
+      </g>
+
+      <!-- Nodes (PCB Pads) -->
+      <g class="circuit-nodes">
+        <circle cx="200" cy="150" r="4" class="node" />
+        <circle cx="250" cy="200" r="4" class="node" />
+        <circle cx="450" cy="150" r="4" class="node" />
+        <circle cx="700" cy="200" r="4" class="node" />
+        
+        <circle cx="800" cy="350" r="4" class="node" />
+        <circle cx="750" cy="300" r="4" class="node" />
+        <circle cx="550" cy="350" r="4" class="node" />
+        <circle cx="350" cy="300" r="4" class="node" />
+        
+        <circle cx="150" cy="550" r="4" class="node" />
+        <circle cx="400" cy="550" r="4" class="node" />
+        <circle cx="650" cy="500" r="4" class="node" />
+        <circle cx="250" cy="450" r="4" class="node" />
+        
+        <circle cx="250" cy="800" r="4" class="node" />
+        <circle cx="500" cy="850" r="4" class="node" />
+        <circle cx="750" cy="800" r="4" class="node" />
+      </g>
+    </svg>
+  </div>
+  <div class="grid-overlay"></div>
+  <div class="vignette"></div>
+</div>
+
+<style>
+  .circuit-background {
+    position: absolute;
+    inset: 0;
+    background: #020204;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .circuit-container {
+    position: absolute;
+    inset: 0;
+    opacity: 0.8;
+  }
+
+  .circuit-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .line-base {
+    stroke: url(#circuitGradient);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .chip {
+    fill: #0a0a14;
+    stroke: #4c1d95;
+    stroke-width: 1;
+    opacity: 0.4;
+  }
+
+  .node {
+    fill: #4c1d95;
+    stroke: rgba(167, 139, 250, 0.2);
+    stroke-width: 1;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+  }
+
+  .signal {
+    stroke: url(#signalGradient);
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: url(#glow);
+    stroke-dasharray: 150 1000;
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+
+  .pulse-1 { animation: flow 8s linear infinite; }
+  .pulse-2 { animation: flow 10s linear infinite 1.5s; }
+  .pulse-3 { animation: flow 12s linear infinite 3s; }
+  .pulse-4 { animation: flow 9s linear infinite 0.5s; }
+  .pulse-5 { animation: flow 11s linear infinite 2s; }
+  .pulse-6 { animation: flow 14s linear infinite 4s; }
+
+  @keyframes flow {
+    0% { 
+      stroke-dashoffset: 1000;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% { 
+      stroke-dashoffset: -1000;
+      opacity: 0;
+    }
+  }
+
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 20%, #020204 100%);
+    pointer-events: none;
+  }
+</style>

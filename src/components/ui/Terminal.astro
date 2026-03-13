@@ -1,0 +1,336 @@
+---
+interface Props {
+  username?: string;
+}
+
+const { username = "anthony" } = Astro.props;
+---
+
+<div class="terminal-container" data-terminal>
+  <div class="terminal-header">
+    <div class="terminal-controls">
+      <span class="control red"></span>
+      <span class="control yellow"></span>
+      <span class="control green"></span>
+    </div>
+    <div class="terminal-title">bash — {username}@portfolio</div>
+  </div>
+  <div class="terminal-body" id="terminal-output">
+    <div class="terminal-line">anthony-portfolio login: {username}</div>
+    <div class="terminal-line">Password: •••••••••</div>
+    <div class="terminal-line">
+      Last login: {new Date().toLocaleDateString()}
+      {new Date().toLocaleTimeString()} on ttys001
+    </div>
+    <div
+      class="terminal-line"
+      style="margin-top: 10px; color: #a78bfa; font-weight: bold;"
+    >
+      Welcome to Anthony's Portfolio OS v1.0.0 (GNU/Linux 5.15.0)
+    </div>
+    <div class="terminal-line">Type 'help' to see available commands.</div>
+    <div class="terminal-line" style="margin-bottom: 10px;">
+      * Documentation: <span class="success-output"
+        >https://github.com/anthonycursewl</span
+      >
+    </div>
+    <div class="terminal-input-line">
+      <span class="terminal-prompt">{username}@portfolio:~$</span>
+      <input
+        type="text"
+        class="terminal-input"
+        id="terminal-input"
+        autofocus
+        spellcheck="false"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+</div>
+
+<style>
+  .terminal-container {
+    width: 100%;
+    background: rgba(13, 13, 15, 0.98);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: "Fira Code", monospace;
+    box-shadow:
+      0 0 40px rgba(20, 19, 22, 0.1),
+      0 20px 50px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  /* Scanline effect */
+  .terminal-container::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background:
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+      linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.02),
+        rgba(0, 255, 0, 0.01),
+        rgba(0, 0, 255, 0.02)
+      );
+    z-index: 10;
+    background-size:
+      100% 4px,
+      3px 100%;
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  .terminal-header {
+    background: #111111;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 11;
+  }
+
+  .terminal-controls {
+    display: flex;
+    gap: 8px;
+    margin-right: 15px;
+  }
+
+  .control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .red {
+    background: #554c4c;
+  }
+  .yellow {
+    background: #5a564d;
+  }
+  .green {
+    background: #49524a;
+  }
+
+  .terminal-title {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    flex-grow: 1;
+    text-align: center;
+    margin-right: 40px;
+  }
+
+  .terminal-body {
+    padding: 20px;
+    height: 400px;
+    overflow-y: auto;
+    color: #f8fafc;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    position: relative;
+    z-index: 11;
+  }
+
+  .terminal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .terminal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  .terminal-line {
+    word-break: break-all;
+    white-space: pre-wrap;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+  }
+
+  .terminal-prompt {
+    color: #a78bfa;
+    white-space: nowrap;
+    text-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+  }
+
+  .terminal-input {
+    background: transparent;
+    border: none;
+    color: #f8fafc;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  .command-output {
+    color: #60a5fa;
+    margin-bottom: 8px;
+  }
+
+  .error-output {
+    color: #f87171;
+  }
+
+  .success-output {
+    color: #4ade80;
+  }
+
+  .ls-output {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    color: #60a5fa;
+  }
+
+  .ls-file {
+    color: #f8fafc;
+  }
+  .ls-dir {
+    color: #818cf8;
+    font-weight: bold;
+  }
+  .ls-exec {
+    color: #4ade80;
+  }
+</style>
+
+<script is:inline>
+  const input = document.getElementById("terminal-input");
+  const output = document.getElementById("terminal-output");
+  const container = document.querySelector("[data-terminal]");
+
+  const commands = {
+    help: () => `Available commands:
+  <span class="success-output">whoami</span>    - Show current user
+  <span class="success-output">ls</span>        - List directory contents
+  <span class="success-output">whois</span>     - Who is Anthony?
+  <span class="success-output">cat</span>       - Display file content
+  <span class="success-output">date</span>      - Show current date/time
+  <span class="success-output">socials</span>   - Social media links
+  <span class="success-output">clear</span>     - Clear terminal screen`,
+
+    whoami: () => "anthony_zerpa (Full-stack Developer)",
+
+    whois: () =>
+      "Anthony Zerpa is a passionate 23-year-old Full-stack Developer from Venezuela. He specializes in building modern web applications with React, Node.js, and Astro. Currently finishing his degree in Computer Engineering.",
+
+    ls: (args) => {
+      const showHidden = args.includes("-a");
+      return `<div class="ls-output">
+        ${showHidden ? '<span class="ls-file">.bashrc</span>' : ""}
+        ${showHidden ? '<span class="ls-file">.git/</span>' : ""}
+        <span class="ls-file">about.txt</span>
+        <span class="ls-dir">projects/</span>
+        <span class="ls-dir">skills/</span>
+        <span class="ls-exec">contact.sh</span>
+        <span class="ls-file">resume.pdf</span>
+      </div>`;
+    },
+
+    cat: (args) => {
+      const file = args[0];
+      if (!file)
+        return '<span class="error-output">cat: missing operand</span>';
+
+      const files = {
+        "about.txt":
+          "I'm a 23-year-old Full-stack Developer from Venezuela. Currently in my last year of Computer Engineering. I love creating polished, user-centric web experiences.",
+        "resume.pdf": "[Binary content - Check 'Download CV' button below.]",
+        "contact.sh":
+          "#!/bin/bash\necho 'Contacting Anthony...'\nopen mailto:zerpanthony.wx@breadriuss.com",
+        ".bashrc": "alias ll='ls -al'\nalias gs='git status'",
+      };
+
+      return (
+        files[file] ||
+        `<span class="error-output">cat: ${file}: No such file or directory</span>`
+      );
+    },
+
+    date: () => new Date().toString(),
+
+    uname: () => "Linux anthony-portfolio 5.15.0-v21-generic x86_64 GNU/Linux",
+
+    clear: () => {
+      setTimeout(() => {
+        const lines = output.querySelectorAll(".terminal-line");
+        lines.forEach((line) => {
+          if (!line.classList.contains("terminal-input-line")) line.remove();
+        });
+      }, 10);
+      return null;
+    },
+
+    socials: () => `GitHub:  https://github.com/anthonycursewl
+    LinkedIn: https://linkedin.com/in/anthonycursewl
+    Twitter:  https://twitter.com/anthonycursewl`,
+  };
+
+  function addLine(content, className = "") {
+    const div = document.createElement("div");
+    div.className = `terminal-line ${className}`;
+    div.innerHTML = content;
+
+    // Insert before the input line
+    const inputLine = output.querySelector(".terminal-input-line");
+    output.insertBefore(div, inputLine);
+
+    output.scrollTop = output.scrollHeight;
+  }
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const fullCommand = input.value.trim();
+      const parts = fullCommand.split(" ");
+      const cmd = parts[0].toLowerCase();
+      const args = parts.slice(1);
+
+      // Add the command we just typed to history
+      const prompt = output.querySelector(".terminal-prompt").innerText;
+      addLine(`${prompt} ${fullCommand}`);
+
+      if (cmd) {
+        if (commands[cmd]) {
+          const result = commands[cmd](args);
+          if (result !== null) {
+            addLine(result, "command-output");
+          }
+        } else {
+          addLine(
+            `<span class="error-output">bash: command not found: ${cmd}</span>`,
+          );
+        }
+      }
+
+      input.value = "";
+      output.scrollTop = output.scrollHeight;
+    }
+  });
+
+  // Keep focus on input when clicking terminal
+  container.addEventListener("click", () => {
+    input.focus();
+  });
+</script>

@@ -1,0 +1,80 @@
+---
+export const prerender = false;
+
+import Layout from '../../../layouts/Layout.astro';
+
+const { provider } = Astro.params;
+const code = Astro.url.searchParams.get('code');
+const error = Astro.url.searchParams.get('error');
+---
+
+<Layout title="Completando autenticación">
+  <main class="callback-container">
+    {error ? (
+      <div class="error">
+        <h2>Error</h2>
+        <p>{error}</p>
+        <a href="/auth/login">Volver a iniciar sesión</a>
+      </div>
+    ) : code ? (
+      <div class="loading">
+        <p>Completando autenticación...</p>
+      </div>
+    ) : (
+      <div class="error">
+        <h2> Código no proporcionado</h2>
+        <a href="/auth/login">Volver a iniciar sesión</a>
+      </div>
+    )}
+  </main>
+</Layout>
+
+<script define:vars={{ provider, code }}>
+  import { authService } from '../../../lib/auth';
+  
+  if (provider && code) {
+    (async () => {
+      try {
+        await authService.getOAuthUrl(provider);
+        
+        const response = await fetch(`/api/auth/callback/${provider}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        });
+        
+        if (response.ok) {
+          window.location.href = '/dashboard';
+        } else {
+          window.location.href = '/auth/login?error=Error en autenticación OAuth';
+        }
+      } catch (err) {
+        window.location.href = '/auth/login?error=Error en autenticación OAuth';
+      }
+    })();
+  }
+</script>
+
+<style>
+  .callback-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .loading {
+    padding: 2rem;
+  }
+  
+  .error {
+    background: #fee;
+    color: #c00;
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  a {
+    color: #0070f3;
+  }
+</style>

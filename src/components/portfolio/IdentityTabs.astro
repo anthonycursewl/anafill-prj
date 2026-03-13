@@ -1,0 +1,154 @@
+---
+import CodeTabs from "../ui/CodeTabs.astro";
+import CodeSnippet from "../ui/CodeSnippet.astro";
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+---
+
+<CodeTabs
+  files={[
+    { name: "identity.ts", language: "TypeScript" },
+    { name: "stack.json", language: "JSON" },
+    { name: "experience.md", language: "Markdown" },
+  ]}
+>
+  <!-- Identity Tab -->
+  <div class="tab-panel active" data-lang="TypeScript">
+    <CodeSnippet
+      code={`
+// Warning: Extremely productive when caffeinated
+const developer = new Developer({
+name: "${name}",
+pronouns: "he/him",
+age: 23,
+base: "Venezuela",
+status: "Available for hire",
+coffee: Infinity, // Converts caffeine to code
+bugsGenerated: 0, // (Error: property is lying)
+stats: {
+  linesOfCode: "100k+",
+  gitCommits: 2450,
+  bugsFixed: 1337,
+  stackOverflowRep: 404 // Not found?
+},
+preferences: {
+  theme: "Dark", // Light mode is for flashbangs
+  editor: ["VS Code", "Antigravity"],
+  tabs: "2 spaces" // The only right way
+},
+timestamp: { 
+  _date: ${new Date().getTime()},
+  timezone: "${new Date().toLocaleString("en-US", { timeZoneName: "short" }).split(" ")[3]}",
+  day: ${new Date().toLocaleString("en-US", { weekday: "long" })},
+  month: ${new Date().toLocaleString("en-US", { month: "long" })},
+  year: ${new Date().getFullYear()},
+  current_anthony_timezones: {
+    america_new_york: "${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}",
+    america_caracas: "${new Date().toLocaleString("en-US", { timeZone: "America/Caracas" })}",
+  },
+  schedule: {
+    start_from: "Mon. 8:30-9:00 AM",
+    end_to: "Fri. 4:30-5:00 PM", // Sometimes a little bit earlier btw
+  },
+},
+stack: ["Node", "React", "Astro"],
+interests: ["Clean Code", "UX Engineering", "System Design"]
+});
+    `}
+    />
+  </div>
+
+  <!-- Stack Tab -->
+  <div class="tab-panel" data-lang="JSON">
+    <CodeSnippet
+      code={`
+{
+  "languages": ["TypeScript", "JavaScript", "SQL", "HTML/CSS", "Go (Golang)"],
+  "frontend": {
+    "frameworks": ["React", "Astro", "Angular", "Next.js"],
+    "styling": ["Tailwind", "CSS Modules", "Lottie Animations"],
+    "state": ["Zustand", "Redux", "Context API"]
+  },
+  "backend": {
+    "runtime": ["Node.js", "Deno"],
+    "frameworks": ["NestJS", "Express", "FastAPI", "Axum"],
+    "database": ["PostgreSQL", "MySQL", "MongoDB", "Redis"],
+    "orm": ["Prisma", "Drizzle"]
+  },
+  "infrastructure": {
+    "devops": ["Docker", "GitHub Actions", "Nginx", "Linux Bash"],
+    "hosting": ["Vercel", "Railway", "VPS", "Netlify", "Cloudflare"]
+  },
+  "tools": ["Git", "GitHub", "VS Code", "Antigravity", "Postman", "Figma"],
+  "architecture": ["Hexagonal Architecture", "Clean Architecture", "Microservices", "Monoliths"]
+}
+    `}
+    />
+  </div>
+
+  <!-- Experience Tab -->
+  <div class="tab-panel" data-lang="Markdown">
+    <CodeSnippet
+      code={`
+# Experience & Education
+
+## Full-stack Freelancer (2025 - Present)
+- Shipped 10+ production projects for global clients.
+- Optimized database queries reducing load times by 40%.
+- Worked on a project that was featured in a tech magazine.
+- Senior frontend engineer at Malet, Breadriuss and others.
+// Survived more legacy codebases than I'd like to admit.
+
+## Computer Engineering @ UPTAIET (Graduated)
+- GPA: Top 5% of class.
+- Graduated in Dec. 2025.
+- Focusing on high-performance web systems and AI integration.
+- Thesis: "Development of a high-performance delivery ecosystem built for scale."
+
+## Open Source Contributor
+- Contributed to various UI libraries and documentation.
+- Fix some bugs in open source projects.
+- Trying to create my own open source project to let the world know about it.
+// Fixing documentation typos counts as contribution, right?
+
+## Oxidux.com 2026 | Oxidux
+- Senior frontend engineer at Oxidux.com.
+- Designed and developed the entire admin dashboard & landing page for Oxidux.com.
+- Optimized the website performance reducing load times by 40%.
+- Implemented a new authentication system using JWT.
+- Implemented a Kanban board for task management using drag and drop functionalities and others layouts. 
+
+## sales.malet.app 2026 | Malet Business
+- Senior frontend engineer at sales.malet.app.
+- Designed and developed the entire dashboard, components, and landing page for sales.malet.app.
+- Optimized the website performance reducing load times by 60%.
+- Implemented System RBAC per store.
+- Implemented auth system using JWT, OAuth2 by accounts.lintted.com, and Google.
+- Backend Desing using Hexagonal Architecture and Clean Architecture.
+
+## Malet.app 2025 - Present | Malet
+- Co-founder of Malet. A practical tracking finance app for individuals or small businesses.
+- Designed and developed the entire app using React Native and Expo.
+- Optimized the app performance to run smoothly on low-end devices.
+- Implemented auth system using JWT, biometric security and Google OAuth2.
+- Backend Design using Hexagonal Architecture, Clean Architecture & Test Driven Development.
+
+## Bitter 2024 | Bitter
+- Developer at Bitter.
+- Developed a new dashboard for Bitter.
+- Implemented authentication system using JWT without refresh tokens.
+- Implemented card components to display contacts, poems and notes.
+
+## Wheek 2024 | Wheek
+- Developer at Wheek.
+- Developed dashboard for Wheek, using my team design.
+- Implemented authentication and authorization system using JWT with RBAC System.
+- Developed using React Native using Expo & Development builds in order to inject native code.
+    `}
+    />
+  </div>
+</CodeTabs>

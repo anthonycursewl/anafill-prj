@@ -1,0 +1,164 @@
+---
+const skills = [
+  { name: "HTML5", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/html5.svg", color: "#E34F26" },
+  { name: "CSS3", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/css3.svg", color: "#1572B6" },
+  { name: "JavaScript", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/javascript.svg", color: "#F7DF1E" },
+  { name: "TypeScript", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/typescript.svg", color: "#3178C6" },
+  { name: "React", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/react.svg", color: "#61DAFB" },
+  { name: "Angular", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/angular.svg", color: "#DD0031" },
+  { name: "Astro", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/astro.svg", color: "#FF5D01" },
+  { name: "Node.js", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/nodedotjs.svg", color: "#339933" },
+  { name: "NestJS", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/nestjs.svg", color: "#E0234E" },
+  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/postgresql.svg", color: "#4169E1" },
+  { name: "MySQL", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mysql.svg", color: "#4479A1" },
+  { name: "Nginx", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/nginx.svg", color: "#009639" },
+  { name: "Git", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/git.svg", color: "#F05032" },
+  { name: "GitHub", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg", color: "#FFFFFF" },
+  { name: "Prisma", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/prisma.svg", color: "#2D3748" },
+  { name: "Lottie", icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/lottie.svg", color: "#00D1FF" },
+];
+---
+
+<section class="skills-section">
+  <div class="skills-header">
+    <h2 class="skills-title">Skills</h2>
+    <p class="skills-subtitle">These are the skills that I've acquired so far. Soft and Hard skills</p>
+  </div>
+  
+  <div class="skills-grid">
+    {skills.map(skill => (
+      <div class="skill-card" style={`--skill-color: ${skill.color}`}>
+        <div class="skill-icon-wrapper">
+          <img src={skill.icon} alt={skill.name} class="skill-icon" />
+        </div>
+        <span class="skill-name">{skill.name}</span>
+      </div>
+    ))}
+  </div>
+
+  <div class="route-section">
+    <h2 class="route-title">My personal Route</h2>
+    <p class="route-subtitle">This is the current road that I've been following to be a Full-stack developer and avoid any kind of problem.</p>
+    <div class="route-placeholder">
+      <p>I'll add it this soon.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills-section {
+    margin: 4rem 0;
+  }
+
+  .skills-header {
+    margin-bottom: 2rem;
+  }
+
+  .skills-title {
+    font-size: 2rem;
+    color: var(--acc-purple, #a78bfa);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .skills-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .skill-card {
+    background: rgba(22, 22, 27, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card:hover {
+    transform: translateY(-5px);
+    background: rgba(30, 30, 35, 0.8);
+    border-color: var(--skill-color);
+    box-shadow: 0 10px 20px -10px var(--skill-color);
+  }
+
+  .skill-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
+  }
+
+  .skill-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(0.2) brightness(0.9);
+    transition: filter 0.3s ease;
+  }
+
+  .skill-card:hover .skill-icon {
+    filter: grayscale(0) brightness(1.1);
+  }
+
+  .skill-name {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-family: var(--font-code, monospace);
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .skill-card:hover .skill-name {
+    color: #f8fafc;
+  }
+
+  /* Route Section */
+  .route-section {
+    margin-top: 5rem;
+  }
+
+  .route-title {
+    font-size: 2rem;
+    color: var(--acc-purple, #a78bfa);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .route-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .route-placeholder {
+    padding: 3rem;
+    background: rgba(22, 22, 27, 0.4);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    .skills-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+  }
+</style>

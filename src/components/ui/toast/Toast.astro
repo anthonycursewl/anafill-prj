@@ -1,0 +1,351 @@
+---
+interface ToastItem {
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  title?: string;
+  message: string;
+  duration?: number;
+}
+
+interface Props {
+  toasts?: ToastItem[];
+}
+
+const { toasts = [] } = Astro.props;
+---
+
+<div class="toast-container" data-toast-container role="region" aria-label="Notificaciones">
+  {toasts.map((toast) => (
+    <div 
+      class:list={['toast', `toast-${toast.type}`]}
+      data-toast-id={toast.id}
+      role="alert"
+      data-duration={toast.duration || 5000}
+    >
+      <div class="toast-icon">
+        {toast.type === 'success' && (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        )}
+        {toast.type === 'error' && (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        )}
+        {toast.type === 'warning' && (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        )}
+        {toast.type === 'info' && (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        )}
+      </div>
+      
+      <div class="toast-content">
+        {toast.title && <strong class="toast-title">{toast.title}</strong>}
+        <p class="toast-message">{toast.message}</p>
+      </div>
+      
+      <button 
+        type="button" 
+        class="toast-close" 
+        data-toast-close
+        aria-label="Cerrar"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <div class="toast-progress" data-toast-progress></div>
+    </div>
+  ))}
+</div>
+
+<script>
+  type ToastType = 'success' | 'error' | 'warning' | 'info';
+  
+  interface ToastOptions {
+    type: ToastType;
+    title?: string;
+    message: string;
+    duration?: number;
+  }
+  
+  class ToastManager {
+    private container: HTMLElement | null = null;
+    private toasts: Map<string, HTMLElement> = new Map();
+    
+    getContainer(): HTMLElement {
+      if (!this.container) {
+        this.container = document.querySelector('[data-toast-container]');
+        if (!this.container) {
+          this.container = document.createElement('div');
+          this.container.className = 'toast-container';
+          this.container.setAttribute('data-toast-container', '');
+          this.container.setAttribute('role', 'region');
+          this.container.setAttribute('aria-label', 'Notificaciones');
+          document.body.appendChild(this.container);
+        }
+      }
+      return this.container;
+    }
+    
+    show(options: ToastOptions): string {
+      const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const { type, title, message, duration = 5000 } = options;
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.setAttribute('data-toast-id', id);
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('data-duration', duration.toString());
+      
+      const iconSvg = {
+        success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+        error: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`,
+        warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+        info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`
+      };
+      
+      toast.innerHTML = `
+        <div class="toast-icon">${iconSvg[type]}</div>
+        <div class="toast-content">
+          ${title ? `<strong class="toast-title">${title}</strong>` : ''}
+          <p class="toast-message">${message}</p>
+        </div>
+        <button type="button" class="toast-close" data-toast-close aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="toast-progress" data-toast-progress></div>
+      `;
+      
+      const closeBtn = toast.querySelector('[data-toast-close]');
+      closeBtn?.addEventListener('click', () => this.remove(id));
+      
+      this.getContainer().appendChild(toast);
+      this.toasts.set(id, toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.add('toast-show');
+      });
+      
+      if (duration > 0) {
+        setTimeout(() => this.remove(id), duration);
+      }
+      
+      return id;
+    }
+    
+    remove(id: string): void {
+      const toast = this.toasts.get(id);
+      if (toast) {
+        toast.classList.remove('toast-show');
+        toast.classList.add('toast-hide');
+        setTimeout(() => {
+          toast.remove();
+          this.toasts.delete(id);
+        }, 300);
+      }
+    }
+    
+    success(message: string, options?: Partial<Omit<ToastOptions, 'type' | 'message'>>): string {
+      return this.show({ type: 'success', message, ...options });
+    }
+    
+    error(message: string, options?: Partial<Omit<ToastOptions, 'type' | 'message'>>): string {
+      return this.show({ type: 'error', message, ...options });
+    }
+    
+    warning(message: string, options?: Partial<Omit<ToastOptions, 'type' | 'message'>>): string {
+      return this.show({ type: 'warning', message, ...options });
+    }
+    
+    info(message: string, options?: Partial<Omit<ToastOptions, 'type' | 'message'>>): string {
+      return this.show({ type: 'info', message, ...options });
+    }
+  }
+  
+  window.toast = new ToastManager();
+</script>
+
+<style is:global>
+  .toast-container {
+    position: fixed;
+    top: var(--space-4);
+    right: var(--space-4);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 400px;
+    width: 100%;
+    pointer-events: none;
+  }
+  
+  .toast {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .toast.toast-show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .toast.toast-hide {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  
+  .toast-success {
+    border-left: 3px solid var(--color-success);
+  }
+  
+  .toast-error {
+    border-left: 3px solid var(--color-danger);
+  }
+  
+  .toast-warning {
+    border-left: 3px solid var(--color-warning);
+  }
+  
+  .toast-info {
+    border-left: 3px solid var(--color-info);
+  }
+  
+  .toast-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .toast-success .toast-icon {
+    color: var(--color-success);
+  }
+  
+  .toast-error .toast-icon {
+    color: var(--color-danger);
+  }
+  
+  .toast-warning .toast-icon {
+    color: var(--color-warning);
+  }
+  
+  .toast-info .toast-icon {
+    color: var(--color-info);
+  }
+  
+  .toast-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .toast-content {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .toast-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-1);
+  }
+  
+  .toast-message {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  .toast-close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+  }
+  
+  .toast-close:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+  
+  .toast-close svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transform-origin: left;
+    animation: progress var(--duration, 5s) linear forwards;
+  }
+  
+  .toast-success .toast-progress {
+    background: var(--color-success);
+  }
+  
+  .toast-error .toast-progress {
+    background: var(--color-danger);
+  }
+  
+  .toast-warning .toast-progress {
+    background: var(--color-warning);
+  }
+  
+  .toast-info .toast-progress {
+    background: var(--color-info);
+  }
+  
+  @keyframes progress {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
+</style>

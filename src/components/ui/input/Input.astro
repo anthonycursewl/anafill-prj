@@ -1,0 +1,175 @@
+---
+interface Props {
+  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
+  name?: string;
+  id?: string;
+  value?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+  readonly?: boolean;
+  autocomplete?: string;
+  autofocus?: boolean;
+  minlength?: string | number;
+  maxlength?: string | number;
+  min?: string | number;
+  max?: string | number;
+  error?: string;
+  label?: string;
+  helper?: string;
+}
+
+const {
+  type = 'text',
+  name,
+  id,
+  value,
+  placeholder,
+  disabled = false,
+  required = false,
+  readonly = false,
+  autocomplete,
+  autofocus = false,
+  minlength,
+  maxlength,
+  min,
+  max,
+  error,
+  label,
+  helper,
+} = Astro.props;
+
+const inputId = id || name;
+---
+
+<div class:list={['input-wrapper', { 'has-error': error, 'is-disabled': disabled }]}>
+  {label && (
+    <label for={inputId} class="input-label">
+      {label}
+      {required && <span class="required-mark">*</span>}
+    </label>
+  )}
+  
+  <div class="input-container">
+    <slot name="prefix" />
+    <input
+      type={type}
+      name={name}
+      id={inputId}
+      value={value}
+      placeholder={placeholder}
+      disabled={disabled}
+      required={required}
+      readonly={readonly}
+      autocomplete={autocomplete}
+      autofocus={autofocus}
+      minlength={minlength}
+      maxlength={maxlength}
+      min={min}
+      max={max}
+      class="input-field"
+    />
+    <slot name="suffix" />
+  </div>
+  
+  {error && <span class="input-error">{error}</span>}
+  {helper && !error && <span class="input-helper">{helper}</span>}
+</div>
+
+<style>
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+  }
+
+  .input-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.025em;
+  }
+
+  .required-mark {
+    color: var(--color-danger);
+    margin-left: var(--space-1);
+  }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background-color: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-3);
+    transition: all var(--transition-fast);
+  }
+
+  .input-container:focus-within {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
+  }
+
+  .has-error .input-container {
+    border-color: var(--color-border-error);
+  }
+
+  .has-error .input-container:focus-within {
+    box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+  }
+
+  .is-disabled .input-container {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--color-bg-tertiary);
+  }
+
+  .input-field {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: var(--space-3) 0;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+  }
+
+  .input-field::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .input-field:disabled {
+    cursor: not-allowed;
+  }
+
+  .input-error {
+    font-size: 0.75rem;
+    color: var(--color-danger);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .input-helper {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  :global(.input-wrapper .input-container svg) {
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  :global(.input-wrapper .input-container svg.icon-prefix) {
+    margin-left: calc(var(--space-3) * -1);
+  }
+
+  :global(.input-wrapper .input-container svg.icon-suffix) {
+    margin-right: calc(var(--space-3) * -1);
+  }
+</style>

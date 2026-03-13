@@ -1,0 +1,78 @@
+---
+interface Props {
+  code: string;
+  lang?: string;
+}
+
+const { code, lang = "js" } = Astro.props;
+
+/**
+ * Un resaltador de sintaxis simple pero efectivo para el portfolio.
+ * Evita tener que escribir spans y &nbsp; manualmente.
+ */
+function highlight(text: string) {
+  const tokens: string[] = [];
+
+  // 1. Escapar entidades HTML básicas primero
+  let escaped = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Función para proteger tokens encontrados
+  function protect(match: string, cls: string) {
+    const placeholder = `«TOKEN_${tokens.length}»`;
+    tokens.push(`<span class="${cls}">${match}</span>`);
+    return placeholder;
+  }
+
+  let processing = escaped;
+
+  // 2. Identificar tokens en orden de prioridad (sin pisarse entre ellos)
+
+  // A. Comentarios (tienen prioridad máxima para ignorar lo que hay dentro)
+  processing = processing.replace(/(\/\/.*|#.*|&lt;!--.*--&gt;)/g, (m) =>
+    protect(m, "syn-cmt"),
+  );
+
+  // B. Strings
+  processing = processing.replace(/("[^"]*"|'[^']*')/g, (m) =>
+    protect(m, "syn-str"),
+  );
+
+  // C. Keywords
+  const keywords =
+    /\b(const|let|var|new|class|function|export|default|import|from|return|if|else|for|while|await|async|interface|type|public|private|static)\b/g;
+  processing = processing.replace(keywords, (m) => protect(m, "syn-kw"));
+
+  // D. Números
+  processing = processing.replace(/\b(\d+)\b/g, (m) => protect(m, "syn-num"));
+
+  // E. Funciones
+  processing = processing.replace(/\b([a-zA-Z_]\w*)(?=\()/g, (m) =>
+    protect(m, "syn-fn"),
+  );
+
+  // F. Variables/Keys (para JSON e Identidad)
+  processing = processing.replace(/\b([a-z_][a-zA-Z0-9_]*)(?=\s*:)/g, (m) =>
+    protect(m, "syn-var"),
+  );
+
+  // 3. Restaurar los tokens protegidos con una Regex global
+  const finalHtml = processing.replace(/«TOKEN_(\d+)»/g, (match, index) => {
+    return tokens[parseInt(index)];
+  });
+
+  // 4. Formatear espacios e indentación
+  return finalHtml
+    .split("\n")
+    .map((line) =>
+      line.replace(/^ +/, (match) => "&nbsp;".repeat(match.length)),
+    )
+    .join("<br />");
+}
+
+const html = highlight(code.trim());
+---
+
+<Fragment set:html={html} />

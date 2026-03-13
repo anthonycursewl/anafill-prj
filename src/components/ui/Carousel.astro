@@ -1,0 +1,279 @@
+---
+interface Props {
+  images: string[];
+  title?: string;
+}
+
+const { images, title = "Project Screenshot" } = Astro.props;
+---
+
+<div class="carousel-viewport" data-carousel>
+  <div class="carousel-track">
+    {
+      images.map((img, index) => (
+        <div class="carousel-slide" data-preview-trigger>
+          <img 
+            src={img} 
+            alt={`${title} - ${index + 1}`} 
+            draggable="false"
+            loading="lazy"
+          />
+          <div class="preview-hint">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            <span>Click to Preview</span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  
+  <div class="carousel-controls">
+    <button class="carousel-btn prev" aria-label="Previous"><span>‹</span></button>
+    <div class="carousel-dots">
+      {images.map((_, i) => <span class:list={["dot", { active: i === 0 }]} data-index={i}></span>)}
+    </div>
+    <button class="carousel-btn next" aria-label="Next"><span>›</span></button>
+  </div>
+</div>
+
+<style>
+  .carousel-viewport {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #0a0a0c;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    user-select: none;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .carousel-viewport:active {
+    cursor: grabbing;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    will-change: transform;
+    height: 100%;
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    filter: brightness(0.9);
+    transition: all 0.4s ease;
+  }
+
+  .preview-hint {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+  }
+
+  .carousel-slide:hover .preview-hint {
+    opacity: 1;
+  }
+
+  .carousel-slide:hover img {
+    filter: brightness(1.1) scale(1.02);
+  }
+
+  /* Controls */
+  .carousel-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+
+  .carousel-viewport:hover .carousel-controls {
+    opacity: 1;
+  }
+
+  .carousel-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+    font-size: 1.5rem;
+  }
+
+  .carousel-btn:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: scale(1.1);
+  }
+
+  .carousel-dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: #ffffff;
+    width: 20px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .carousel-controls {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll('[data-carousel]').forEach(carousel => {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+    const dots = Array.from(carousel.querySelectorAll('.dot'));
+    const nextBtn = carousel.querySelector('.next');
+    const prevBtn = carousel.querySelector('.prev');
+    const triggers = carousel.querySelectorAll('[data-preview-trigger]');
+    const projectImages = Array.from(slides).map(s => s.querySelector('img').src);
+    
+    let currentIndex = 0;
+    let isDragging = false;
+    let startPos = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let animationID = 0;
+
+    // Movement logic
+    const updatePosition = () => {
+      currentIndex = Math.max(0, Math.min(currentIndex, slides.length - 1));
+      prevTranslate = currentIndex * -carousel.offsetWidth;
+      currentTranslate = prevTranslate;
+      track.style.transform = `translateX(${currentTranslate}px)`;
+      
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
+      });
+    };
+
+    const next = () => {
+      currentIndex++;
+      if (currentIndex >= slides.length) currentIndex = 0;
+      updatePosition();
+    };
+
+    const prev = () => {
+      currentIndex--;
+      if (currentIndex < 0) currentIndex = slides.length - 1;
+      updatePosition();
+    };
+
+    nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+    prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+
+    // Lightbox triggers
+    triggers.forEach((trigger, idx) => {
+      trigger.addEventListener('click', () => {
+        if (!isDragging && window.openLightbox) {
+          window.openLightbox(projectImages, idx);
+        }
+      });
+    });
+
+    // Draggable logic
+    carousel.addEventListener('mousedown', dragStart);
+    carousel.addEventListener('touchstart', dragStart);
+    carousel.addEventListener('mouseup', dragEnd);
+    carousel.addEventListener('touchend', dragEnd);
+    carousel.addEventListener('mouseleave', dragEnd);
+    carousel.addEventListener('mousemove', drag);
+    carousel.addEventListener('touchmove', drag);
+
+    function dragStart(e) {
+      if (e.target.closest('.carousel-controls')) return;
+      isDragging = true;
+      startPos = getPositionX(e);
+      animationID = requestAnimationFrame(animation);
+      track.style.transition = 'none';
+      carousel.style.cursor = 'grabbing';
+    }
+
+    function drag(e) {
+      if (!isDragging) return;
+      const currentPosition = getPositionX(e);
+      currentTranslate = prevTranslate + currentPosition - startPos;
+    }
+
+    function dragEnd(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      cancelAnimationFrame(animationID);
+      carousel.style.cursor = 'grab';
+      
+      const movedBy = currentTranslate - prevTranslate;
+
+      if (movedBy < -100 && currentIndex < slides.length - 1) currentIndex++;
+      if (movedBy > 100 && currentIndex > 0) currentIndex--;
+
+      track.style.transition = 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1)';
+      updatePosition();
+    }
+
+    function getPositionX(e) {
+      return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+    }
+
+    function animation() {
+      track.style.transform = `translateX(${currentTranslate}px)`;
+      if (isDragging) requestAnimationFrame(animation);
+    }
+
+    // Handle resize
+    window.addEventListener('resize', updatePosition);
+  });
+</script>

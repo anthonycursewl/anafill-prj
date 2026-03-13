@@ -1,0 +1,200 @@
+---
+interface Props {
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  loading?: boolean;
+  fullWidth?: boolean;
+  href?: string;
+  target?: '_blank' | '_self' | '_parent' | '_top';
+  name?: string;
+  value?: string;
+}
+
+const {
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  loading = false,
+  fullWidth = false,
+  href,
+  target,
+  name,
+  value,
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+---
+
+{Tag === 'button' ? (
+  <button
+    type={type}
+    name={name}
+    value={value}
+    disabled={disabled || loading}
+    class:list={[
+      'btn',
+      `btn-${variant}`,
+      `btn-${size}`,
+      { 'btn-loading': loading, 'btn-full': fullWidth }
+    ]}
+    data-loading={loading}
+  >
+    {loading && (
+      <span class="btn-spinner"></span>
+    )}
+    <span class="btn-content" data-hidden={loading}>
+      <slot />
+    </span>
+  </button>
+) : (
+  <a
+    href={href}
+    target={target}
+    rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+    class:list={[
+      'btn',
+      `btn-${variant}`,
+      `btn-${size}`,
+      { 'btn-loading': loading, 'btn-full': fullWidth }
+    ]}
+    data-disabled={disabled}
+  >
+    {loading && (
+      <span class="btn-spinner"></span>
+    )}
+    <span class="btn-content" data-hidden={loading}>
+      <slot />
+    </span>
+  </a>
+)}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Variants */
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-bg-primary);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-secondary {
+    background: var(--color-secondary);
+    color: var(--color-text-primary);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-secondary-hover);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-text-muted);
+    color: var(--color-text-primary);
+  }
+
+  /* Sizes */
+  .btn-sm {
+    height: 32px;
+    padding: 0 var(--space-3);
+    font-size: 0.75rem;
+  }
+
+  .btn-md {
+    height: 40px;
+    padding: 0 var(--space-4);
+    font-size: 0.875rem;
+  }
+
+  .btn-lg {
+    height: 48px;
+    padding: 0 var(--space-6);
+    font-size: 1rem;
+  }
+
+  /* States */
+  .btn:disabled,
+  .btn[data-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+
+  /* Loading */
+  .btn-loading .btn-content {
+    visibility: hidden;
+  }
+
+  .btn-spinner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .btn-content[data-hidden="true"] {
+    visibility: hidden;
+  }
+
+  /* Icon button */
+  :global(.btn-icon) {
+    padding: 0;
+    aspect-ratio: 1;
+  }
+
+  :global(.btn-icon.btn-sm) {
+    width: 32px;
+  }
+
+  :global(.btn-icon.btn-md) {
+    width: 40px;
+  }
+
+  :global(.btn-icon.btn-lg) {
+    width: 48px;
+  }
+</style>

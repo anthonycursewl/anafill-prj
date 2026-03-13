@@ -1,0 +1,387 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+import CRTBackground from '../../components/auth/CRTBackground.astro';
+
+const error = Astro.url.searchParams.get('error');
+---
+
+<Layout title="Sign Up">
+  <div class="auth-page">
+    <div class="auth-background">
+      <CRTBackground />
+    </div>
+    
+    <main class="auth-container">
+      <div class="auth-card">
+        <div class="card-glow glow-1"></div>
+        <div class="card-glow glow-2"></div>
+        
+        <div class="auth-header">
+          <div class="logo">
+            <svg viewBox="0 0 40 40" fill="none">
+              <rect x="2" y="2" width="36" height="36" rx="8" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 20L18 26L28 14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h1 class="auth-title">Create Account</h1>
+          <p class="auth-subtitle">Join us today</p>
+        </div>
+        
+        {error && (
+          <div class="auth-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
+        
+        <form id="register-form" class="auth-form">
+          <Input 
+            type="text" 
+            name="name" 
+            label="Full Name" 
+            placeholder="John Doe"
+            required
+            autocomplete="name"
+          />
+          
+          <Input 
+            type="email" 
+            name="email" 
+            label="Email" 
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+          
+          <Input 
+            type="password" 
+            name="password" 
+            label="Password" 
+            placeholder="••••••••"
+            required
+            minlength="8"
+            autocomplete="new-password"
+            helper="Minimum 8 characters"
+          />
+          
+          <div class="form-options">
+            <label class="terms">
+              <input type="checkbox" name="terms" required />
+              <span class="checkbox-custom"></span>
+              <span>I agree to the <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a></span>
+            </label>
+          </div>
+          
+          <Button type="submit" variant="primary" fullWidth>
+            Create Account
+          </Button>
+        </form>
+        
+        <div class="auth-divider">
+          <span>or sign up with</span>
+        </div>
+        
+        <div class="oauth-buttons">
+          <a href="/auth/oauth/google" class="oauth-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span>Google</span>
+          </a>
+          <a href="/auth/oauth/github" class="oauth-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            <span>GitHub</span>
+          </a>
+        </div>
+        
+        <p class="auth-footer">
+          Already have an account? <a href="/auth/login">Sign In</a>
+        </p>
+      </div>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #0a0a0f;
+  }
+  
+  .auth-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  
+  .auth-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    padding: var(--space-4);
+  }
+  
+  .auth-card {
+    position: relative;
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(167, 139, 250, 0.15);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+  
+  .card-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .glow-1 {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%);
+    top: -80px;
+    right: -60px;
+    opacity: 0.6;
+  }
+  
+  .glow-2 {
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(196, 181, 253, 0.2) 0%, transparent 70%);
+    bottom: -60px;
+    left: -50px;
+    opacity: 0.4;
+  }
+  
+  .auth-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+  }
+  
+  .logo {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--space-4);
+    color: #a78bfa;
+  }
+  
+  .logo svg { width: 100%; height: 100%; }
+  
+  .auth-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 var(--space-2);
+    letter-spacing: -0.025em;
+  }
+  
+  .auth-subtitle {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+  }
+  
+  .auth-error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+    color: #ff6b7a;
+    font-size: 0.875rem;
+  }
+  
+  .auth-error svg { width: 18px; height: 18px; flex-shrink: 0; }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  
+  .form-options {
+    font-size: 0.8125rem;
+  }
+  
+  .terms {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    line-height: 1.4;
+  }
+  
+  .terms input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .checkbox-custom {
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    transition: all var(--transition-fast);
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .terms input:checked + .checkbox-custom {
+    background: #a78bfa;
+    border-color: #a78bfa;
+  }
+  
+  .terms input:checked + .checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid #000000;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .terms a {
+    color: #a78bfa;
+  }
+  
+  .terms a:hover {
+    text-decoration: underline;
+  }
+  
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+  }
+  
+  .auth-divider::before,
+  .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .auth-divider span {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .oauth-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+  
+  .oauth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+  
+  .oauth-btn:hover {
+    background: rgba(167, 139, 250, 0.1);
+    border-color: rgba(167, 139, 250, 0.3);
+  }
+  
+  .oauth-btn svg { width: 18px; height: 18px; }
+  
+  .auth-footer {
+    text-align: center;
+    margin-top: var(--space-6);
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .auth-footer a {
+    color: #a78bfa;
+    font-weight: 500;
+  }
+  
+  .auth-footer a:hover { text-decoration: underline; }
+  
+  :global(.auth-card .btn-primary) {
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+    color: #ffffff;
+    border: none;
+  }
+  
+  :global(.auth-card .btn-primary:hover:not(:disabled)) {
+    background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%);
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+  }
+</style>
+
+<script>
+  import { authService } from '../../lib/auth';
+  
+  const form = document.getElementById('register-form') as HTMLFormElement;
+  
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    
+    try {
+      await authService.register({ name, email, password });
+      window.location.href = '/dashboard';
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Registration failed';
+      window.location.href = `/auth/register?error=${encodeURIComponent(message)}`;
+    }
+  });
+</script>

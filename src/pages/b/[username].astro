@@ -1,0 +1,160 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Terminal from "../../components/ui/Terminal.astro";
+import Lightbox from "../../components/ui/Lightbox.astro";
+import Bio from "../../components/portfolio/Bio.astro";
+import IdentityTabs from "../../components/portfolio/IdentityTabs.astro";
+import FriendlyIdentity from "../../components/portfolio/FriendlyIdentity.astro";
+import ProjectsSection from "../../components/portfolio/ProjectsSection.astro";
+import PortfolioFooter from "../../components/portfolio/PortfolioFooter.astro";
+import PortfolioScripts from "../../components/portfolio/PortfolioScripts.astro";
+import Navbar from "../../components/ui/Navbar.astro";
+import "../../styles/portfolio-theme.css";
+
+const { username: rawUsername } = Astro.params;
+const username = rawUsername?.startsWith("@")
+  ? rawUsername.slice(1)
+  : rawUsername;
+
+if (username !== "anthonycursewl") {
+  return Astro.redirect("/b/@anthonycursewl");
+}
+
+const displayName = "Anthony Zerpa";
+
+const userProfile = {
+  name: displayName,
+  role: "Full-stack developer",
+  email: "zerpaanthony.wx@breadriuss.com",
+  github: "https://github.com/anthonycursewl",
+  bio: [
+    "I'm a <span class='syn-highlight'>Full-stack developer with a passion for creating innovative and user-friendly web applications</span>. I've been practicing all these years and I'm always looking for new challenges to improve my skills.",
+    `If you're here it's because you might be interested in my portfolio or just want to know more about me. I'm ${displayName}, I'm 23, I live in <span class='syn-highlight'>Venezuela</span> and I'm a Tech enthusiast. Part of my time I'm programming, studying and creating new sounds.`,
+  ],
+};
+---
+
+<Layout title={`${userProfile.name} | Full-stack Developer`}>
+  <div class="max-w-600">
+    <Terminal username={username} />
+
+    <div id="bio">
+      <Bio bio={userProfile.bio} />
+    </div>
+
+    <!-- Identity Mode Toggle -->
+    <div id="identity" class="identity-toggle-container">
+      <button id="tech-toggle" class="mode-toggle-btn">
+        <span class="toggle-text-human">Aren't you a tech person? <b>Click here</b></span>
+        <span class="toggle-text-tech" style="display: none;">Show me the <b>technical stuff</b></span>
+      </button>
+    </div>
+
+    <!-- Identity Sections Wrapper -->
+    <div id="identity-wrapper" class="identity-wrapper">
+      <div id="tech-view" class="view-panel active">
+        <IdentityTabs name={userProfile.name} />
+      </div>
+      <div id="human-view" class="view-panel" style="display: none;">
+        <FriendlyIdentity name={userProfile.name} />
+      </div>
+    </div>
+
+    <div id="projects">
+      <ProjectsSection />
+    </div>
+
+    <div id="contact">
+      <PortfolioFooter email={userProfile.email} />
+    </div>
+  </div>
+
+  <Navbar />
+  <Lightbox />
+
+  <PortfolioScripts />
+
+  <script is:inline>
+    // Identity View Toggle Logic
+    const toggleBtn = document.getElementById('tech-toggle');
+    const techView = document.getElementById('tech-view');
+    const humanView = document.getElementById('human-view');
+    const humanText = toggleBtn.querySelector('.toggle-text-human');
+    const techText = toggleBtn.querySelector('.toggle-text-tech');
+
+    let currentMode = 'tech';
+
+    toggleBtn.addEventListener('click', () => {
+      if (currentMode === 'tech') {
+        techView.style.display = 'none';
+        humanView.style.display = 'block';
+        humanText.style.display = 'none';
+        techText.style.display = 'block';
+        currentMode = 'human';
+      } else {
+        techView.style.display = 'block';
+        humanView.style.display = 'none';
+        humanText.style.display = 'block';
+        techText.style.display = 'none';
+        currentMode = 'tech';
+      }
+    });
+  </script>
+
+  <style is:global>
+    /* Mode Toggle Button Styles */
+    .identity-toggle-container {
+      margin: 2rem 0 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mode-toggle-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      color: #94a3b8;
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      width: 100%;
+      text-align: center;
+    }
+
+    .mode-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    .mode-toggle-btn b {
+      color: #ffffff;
+      text-decoration: underline;
+      text-decoration-color: rgba(255, 255, 255, 0.3);
+      padding-left: 4px;
+    }
+
+    .identity-wrapper {
+      min-height: 400px;
+    }
+
+    .view-panel {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Local layout overrides to ensure 600px centering */
+    body {
+      background-color: #0a0a0c !important;
+      padding-top: 5vh !important;
+    }
+    .highlight-name {
+      color: var(--acc-purple);
+    }
+    .syn-num {
+      color: #d19a66;
+    }
+  </style>
+</Layout>
