@@ -3,13 +3,29 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@domain/*": ["src/domain/*"],
-      "@ports/*": ["src/ports/*"],
-      "@adapters/*": ["src/adapters/*"],
-      "@lib/*": ["src/lib/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@ports/*": [
+        "src/ports/*"
+      ],
+      "@adapters/*": [
+        "src/adapters/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
+      ]
     }
   },
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "include": [
+    ".astro/types.d.ts",
+    "**/*",
+    "./worker-configuration.d.ts"
+  ],
+  "exclude": [
+    "dist"
+  ]
 }
