@@ -1,0 +1,121 @@
+---
+---
+
+<canvas id="particle-canvas"></canvas>
+
+<style>
+  #particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    var canvas = document.getElementById('particle-canvas');
+    if (!canvas) return;
+    
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+
+    var mouse = { x: -1000, y: -1000 };
+    var scrollY = 0;
+    var radius = 100;
+    var spacing = isMobile ? 50 : 40;
+
+    var particles = [];
+
+    function initParticles() {
+      particles = [];
+      var cols = Math.ceil(canvas.width / spacing);
+      var rows = Math.ceil(canvas.height / spacing);
+      for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+          particles.push({
+            x: i * spacing + spacing / 2,
+            y: j * spacing + spacing / 2,
+            glow: 0
+          });
+        }
+      }
+    }
+
+    initParticles();
+
+    function draw() {
+      ctx.fillStyle = '#0a0a0c';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      var scrollParticles = scrollY * 0.5;
+
+      for (var k = 0; k < particles.length; k++) {
+        var p = particles[k];
+        
+        var targetGlow;
+        if (isMobile) {
+          var screenTop = scrollY;
+          var screenBottom = scrollY + canvas.height;
+          var particleScreenY = p.y;
+          
+          if (particleScreenY >= screenTop - 50 && particleScreenY <= screenBottom + 50) {
+            var distY = Math.abs(particleScreenY - (screenTop + canvas.height * 0.3));
+            var maxDist = canvas.height * 0.5;
+            targetGlow = Math.max(0, 1 - (distY / maxDist));
+          } else {
+            targetGlow = 0;
+          }
+        } else {
+          var dx = mouse.x - p.x;
+          var dy = mouse.y - p.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          targetGlow = dist < radius ? 1 - (dist / radius) : 0;
+        }
+
+        p.glow += (targetGlow - p.glow) * 0.15;
+
+        var baseAlpha = 0.15;
+        var glowAlpha = baseAlpha + p.glow * 0.7;
+        var size = 1 + p.glow * 0.5;
+
+        var brightness = Math.floor(80 + p.glow * 175);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + brightness + ',' + brightness + ',' + brightness + ',' + glowAlpha + ')';
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    document.addEventListener('mousemove', function(e) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    window.addEventListener('scroll', function() {
+      scrollY = window.scrollY;
+    });
+
+    window.addEventListener('resize', function() {
+      isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      spacing = isMobile ? 50 : 40;
+      resize();
+      initParticles();
+    });
+  })();
+</script>

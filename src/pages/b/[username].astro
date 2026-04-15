@@ -9,6 +9,7 @@ import ProjectsSection from "../../components/portfolio/ProjectsSection.astro";
 import PortfolioFooter from "../../components/portfolio/PortfolioFooter.astro";
 import PortfolioScripts from "../../components/portfolio/PortfolioScripts.astro";
 import Navbar from "../../components/ui/Navbar.astro";
+import ParticleBackground from "../../components/ui/ParticleBackground.astro";
 import "../../styles/portfolio-theme.css";
 
 const { username: rawUsername } = Astro.params;
@@ -35,7 +36,8 @@ const userProfile = {
 ---
 
 <Layout title={`${userProfile.name} | Full-stack Developer`}>
-  <div class="max-w-600">
+  <ParticleBackground />
+  <div class="max-w-600" style="position: relative; z-index: 1;">
     <Terminal username={username} />
 
     <div id="bio">
