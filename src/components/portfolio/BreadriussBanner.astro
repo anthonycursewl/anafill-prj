@@ -27,7 +27,7 @@
 
   let visitorCountry = 'unknown';
 
-  fetch('https://ipapi.co/json/')
+  fetch('/api/geo')
     .then(res => res.ok ? res.json() : Promise.reject())
     .then(data => { if (data.country_code) visitorCountry = data.country_code; })
     .catch(() => {});

@@ -380,8 +380,7 @@
     // IP Location Logic - Using a more robust approach
     async function getVisitorData() {
       try {
-        // Primary API: ipapi.co
-        const res = await fetch("https://ipapi.co/json/");
+        const res = await fetch("/api/geo");
         if (!res.ok) throw new Error("Primary API failed");
 
         const data = await res.json();
