@@ -36,6 +36,8 @@ const experience = [
     desc: "Co-created a finance tracking app used by small businesses to manage their logistics."
   }
 ];
+
+const aboutMe = `I'm the owner and founder of Breadriuss, a growing cybersecurity company on a mission to strengthen the entire Venezuelan and Latin American infrastructure. We're building robust security solutions to make Latin American infrastructure more resilient and secure.`;
 ---
 
 <div class="friendly-identity">
@@ -47,6 +49,12 @@ const experience = [
         <span class="stat-label">{stat.label}</span>
       </div>
     ))}
+  </div>
+
+  <!-- Founder Story -->
+  <div class="founder-story">
+    <h4 class="section-title">Founder & Owner @ Breadriuss</h4>
+    <p class="founder-desc">{aboutMe}</p>
   </div>
 
   <!-- Tech Groups -->
@@ -186,6 +194,20 @@ const experience = [
     font-size: 0.9rem;
     color: #94a3b8;
     line-height: 1.5;
+  }
+
+  .founder-story {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .founder-desc {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin: 0;
   }
 
   @media (min-width: 480px) {
