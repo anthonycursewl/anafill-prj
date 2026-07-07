@@ -384,11 +384,11 @@
         if (!res.ok) throw new Error("Primary API failed");
 
         const data = await res.json();
-        if (data.country_code) {
+        if (data.country_code && data.country_code.length === 2) {
           const countryCode = data.country_code.toLowerCase();
           const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
           locationEl.innerHTML = `
-            <div class="location-badge" title="${data.country_name} (${data.ip})">
+            <div class="location-badge" title="${data.country_name || countryCode}">
               <img src="${flagUrl}" alt="${data.country_code}" style="width: 20px; height: auto; border-radius: 2px; display: block;" />
               <span class="country-text">${data.country_code}</span>
             </div>
