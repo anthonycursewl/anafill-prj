@@ -4,7 +4,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const url = new URL(context.request.url);
   const path = url.pathname;
 
-  if (path === "/b/@anthonycursewl" || path === "/404") {
+  if (path === "/" || path === "/b/@anthonycursewl" || path === "/404") {
     return next();
   }
 
